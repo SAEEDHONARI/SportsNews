@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/articleFragment"
+        android:title="Article"
+        android:icon="@drawable/ic_article" />
+
+    <item android:id="@+id/personalFragment"
+        android:title="Personal Info"
+        android:icon="@drawable/ic_person" />
+
+
+</menu>
