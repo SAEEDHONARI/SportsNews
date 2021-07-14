@@ -19,5 +19,14 @@
         android:id="@+id/articleFragment2"
         android:name="com.example.baloot_saeedhonari.ui.fragments.article.ArticleFragment"
         android:label="article_fragment"
-        tools:layout="@layout/article_fragment" />
+        tools:layout="@layout/article_fragment" >
+        <action
+            android:id="@+id/action_articleFragment2_to_personalInfoFragment"
+            app:destination="@id/personalInfoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/personalInfoFragment"
+        android:name="com.example.baloot_saeedhonari.ui.fragments.personal.PersonalInfoFragment"
+        android:label="personal_info_fragment"
+        tools:layout="@layout/personal_info_fragment" />
 </navigation>

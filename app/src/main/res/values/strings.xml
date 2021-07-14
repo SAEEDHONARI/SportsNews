@@ -1,4 +1,11 @@
 <resources>
     <string name="app_name">baloot-saeedhonari</string>
     <string name="sports_news">Sports News</string>
+    <string name="desc_profile">Android Developer - Java/Kotlin</string>
+    <string name="name_profile">Saeid Honari</string>
+    <string name="mail_address">Honari.1370@gmail.com</string>
+    <string name="tell_num">+98 903 903 3042</string>
+    <string name="tv_title_bottom_sheet">About me</string>
+    <string name="tv_description_bottom_sheet">I’m 29 years old and work as a Java,kotlin and Android developer ,I have high hopes for the future and I have a lot of perseverance and a spirit of high progress and I am very interested in becoming a professional in the field of programming. Here’s my story...</string>
+    <string name="about_me">About me</string>
 </resources>
