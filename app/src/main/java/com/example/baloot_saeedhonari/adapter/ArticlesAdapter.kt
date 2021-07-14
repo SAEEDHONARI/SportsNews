@@ -2,12 +2,14 @@ package com.example.baloot_saeedhonari.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.baloot_saeedhonari.data.model.Article
 import com.example.baloot_saeedhonari.databinding.ItemArticlePreviewBinding
+import com.example.baloot_saeedhonari.ui.fragments.article.ArticleViewModel
 
 class ArticlesAdapter(private val listener: OnItemClickListener): ListAdapter<Article, ArticlesAdapter.ArticleViewHolder>(DiffCallback()) {
 
@@ -42,8 +44,9 @@ class ArticlesAdapter(private val listener: OnItemClickListener): ListAdapter<Ar
                 tvDescription.text = article.description
                 tvTitle.text = article.title
                 tvPublishedAt.text = article.author
-                tvSource.text = article.source?.name
+               // tvSource.text = article.source?.name
             }
+
         }
     }
 

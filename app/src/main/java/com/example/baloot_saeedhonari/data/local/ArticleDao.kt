@@ -1,4 +1,4 @@
-package com.kadirkuruca.newsapp.data.local
+package com.example.baloot_saeedhonari.data.local
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
@@ -7,15 +7,19 @@ import com.example.baloot_saeedhonari.data.model.Article
 @Dao
 interface ArticleDao {
 
-    @Query("SELECT * FROM article_table")
-    fun getArticles() : LiveData<List<Article>>
 
+    /**
+     * Insert articles into the database
+     */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(article: Article) : Long
+    fun insertArticles(articles: List<Article>): List<Long>
 
-    @Delete
-    suspend fun delete(article: Article)
+    /**
+     * Get all the articles from database
+     */
+    @Query("SELECT * FROM article_table")
+    fun getNewsArticles(): LiveData<List<Article>>
 
     @Query("DELETE FROM article_table")
-    suspend fun deleteAllArticles()
+    abstract fun deleteAllArticles()
 }

@@ -1,10 +1,12 @@
 package com.example.baloot_saeedhonari.ui.fragments.article
 
 import android.content.Context
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.baloot_saeedhonari.util.Resource
+import com.example.baloot_saeedhonari.api.network.Resource
+import com.example.baloot_saeedhonari.data.model.Article
 import com.example.baloot_saeedhonari.data.model.ArticleResponse
 import com.example.baloot_saeedhonari.repository.ArticleRepository
 import com.example.baloot_saeedhonari.util.hasInternetConnection
@@ -16,57 +18,23 @@ import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
-class ArticleViewModel @Inject constructor(
-    private val articleRepository: ArticleRepository,
-    @ApplicationContext private val context: Context
-) : ViewModel() {
+class ArticleViewModel @Inject constructor(private val newsRepository: ArticleRepository) : ViewModel() {
 
-    val ArticleMutable: MutableLiveData<Resource<ArticleResponse>> = MutableLiveData()
-    var ArticlePage = 1
-    var articleResponse: ArticleResponse? = null
+    /**
+     * Loading news articles from internet and database
+     */
+    private fun newsArticles(category: String): LiveData<Resource<List<Article>?>> =
+        newsRepository.getNewsArticles(category)
 
-    init {
-        getArticles("sports")
-    }
 
-    fun getArticles(category: String) = viewModelScope.launch {
-        safeArticleCall(category)
-    }
+    fun getNewsArticles(category: String) = newsArticles(category)
 
-    private suspend fun safeArticleCall(countryCode: String){
-        ArticleMutable.postValue(Resource.Loading())
-        try{
-            if(hasInternetConnection(context)){
-                val response = articleRepository.getArticle(countryCode, ArticlePage)
-                ArticleMutable.postValue(handleBreakingNewsResponse(response))
-            }
-            else{
-                ArticleMutable.postValue(Resource.Error("No Internet Connection"))
-            }
-        }
-        catch (ex : Exception){
-            when(ex){
-                is IOException -> ArticleMutable.postValue(Resource.Error("Network Failure"))
-                else -> ArticleMutable.postValue(Resource.Error("Conversion Error"))
-            }
-        }
-    }
+    /**
+     * Loading news articles from internet only
+     */
+    private fun newsArticlesFromOnlyServer(countryKey: String) =
+        newsRepository.getNewsArticlesFromServerOnly(countryKey)
 
-    private fun handleBreakingNewsResponse(response: Response<ArticleResponse>): Resource<ArticleResponse> {
-        if (response.isSuccessful) {
-            response.body()?.let { resultResponse ->
-                ArticlePage++
-                if (articleResponse == null)
-                    articleResponse = resultResponse
-                else {
-                    val oldArticles = articleResponse?.articles
-                    val newArticles = resultResponse.articles
-                    oldArticles?.addAll(newArticles)
-                }
-                return Resource.Success(articleResponse ?: resultResponse)
-            }
-        }
-        return Resource.Error(response.message())
-    }
+    fun getNewsArticlesFromServer(countryKey: String) = newsArticlesFromOnlyServer(countryKey)
 
 }

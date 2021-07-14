@@ -1,22 +1,17 @@
-package com.kadirkuruca.newsapp.data.local
+package com.example.baloot_saeedhonari.data.local
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
+import com.example.baloot_saeedhonari.data.local.ArticleDao
 import com.example.baloot_saeedhonari.data.model.Article
-import com.kadirkuruca.newsapp.di.ApplicationScope
-import kotlinx.coroutines.CoroutineScope
-import javax.inject.Inject
-import javax.inject.Provider
 
-@Database(entities = [Article::class], version = 1)
-@TypeConverters(Converters::class)
+
+@Database(entities = [Article::class], version = 1, exportSchema = false)
 abstract class ArticleDatabase : RoomDatabase() {
 
-    abstract fun getArticleDao(): ArticleDao
+    /**
+     * Get DAO's
+     */
+    abstract fun ArticlesDao(): ArticleDao
 
-    class Callback @Inject constructor(
-        private val database: Provider<ArticleDatabase>,
-        @ApplicationScope private val applicationScope: CoroutineScope
-    ) : RoomDatabase.Callback()
 }

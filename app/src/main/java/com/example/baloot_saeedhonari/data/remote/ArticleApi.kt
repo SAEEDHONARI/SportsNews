@@ -1,19 +1,17 @@
 package com.example.baloot_saeedhonari.data.remote
 
-import com.example.baloot_saeedhonari.data.model.ArticleResponse
-import com.example.baloot_saeedhonari.util.API_KEY
-import retrofit2.Response
+import androidx.lifecycle.LiveData
+import com.example.baloot_saeedhonari.api.network.Resource
+import com.example.baloot_saeedhonari.data.model.Source
 import retrofit2.http.GET
-import retrofit2.http.Query
+import retrofit2.http.QueryMap
 
 interface ArticleApi {
-
-    @GET("v2/top-headlines")
-    suspend fun getArticles(
-        @Query("category") countryCode: String = "sports",
-        @Query("page") pageNumber: Int = 1,
-        @Query("apiKey") apiKey: String = API_KEY
-    ): Response<ArticleResponse>
-
+    /**
+     * Fetch news articles from Google news using GET API Call on given Url
+     * Url would be something like this top-headlines?country=my&apiKey=XYZ
+     */
+    @GET("top-headlines")
+    fun getNewsSource(@QueryMap options: Map<String, String>): LiveData<Resource<Source>>
 
 }

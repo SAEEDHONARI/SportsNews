@@ -1,10 +1,11 @@
 package com.example.baloot_saeedhonari.data.model
 
-import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import com.google.gson.annotations.SerializedName
 
-@Parcelize
+
 data class Source(
-    val id: String,
-    val name: String
-):Parcelable
+    @SerializedName("status") var status: String = "",
+    @SerializedName("source") var source: String = "",
+    @SerializedName("sortBy") var sortBy: String = "",
+    @SerializedName("articles") var articles: List<Article> = emptyList()
+)
