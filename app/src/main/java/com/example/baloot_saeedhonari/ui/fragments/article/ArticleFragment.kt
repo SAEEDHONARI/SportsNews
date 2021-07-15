@@ -1,10 +1,13 @@
 package com.example.baloot_saeedhonari.ui.fragments.article
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.View
 import android.widget.AbsListView
+import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,6 +20,8 @@ import com.example.baloot_saeedhonari.util.QUERY_PAGE_SIZE
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.article_fragment.*
+import java.util.concurrent.Executors
+
 
 private const val TAG = "ArticleFragment"
 
@@ -26,12 +31,12 @@ class ArticleFragment : Fragment(R.layout.article_fragment), ArticlesAdapter.OnI
     var isLoading = false
     var isLastPage = false
     var isScrolling = false
-
+    val articleAdapter = ArticlesAdapter(this)
+     var oldListArticles = mutableSetOf<Article>()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val binding = ArticleFragmentBinding.bind(view)
-        val articleAdapter = ArticlesAdapter(this)
 
+        val binding = ArticleFragmentBinding.bind(view)
         requireActivity().bottomNavigationView.visibility = View.VISIBLE
         binding.apply {
             rvArticles.apply {
@@ -39,21 +44,31 @@ class ArticleFragment : Fragment(R.layout.article_fragment), ArticlesAdapter.OnI
                 setHasFixedSize(true)
                 addOnScrollListener(this@ArticleFragment.scrollListener)
             }
+
+            btn_fab.setOnClickListener {
+                Executors.newSingleThreadExecutor().execute(Runnable {
+                    viewModel.CleareCache()
+                })
+                Toast.makeText(requireContext(),"The Cache was cleared",Toast.LENGTH_LONG).show()
+
+            }
         }
 
         viewModel.getNewsArticles(CATEGORY_NEWS).observe(viewLifecycleOwner) {
             when {
                 it.status.isLoading() -> {
-                    paginationProgressBar.visibility = View.INVISIBLE
+                    paginationProgressBar.visibility = View.VISIBLE
                     isLoading = false
                 }
                 it.status.isSuccessful() -> {
                     it.data?.let { articleResponse ->
-                        articleAdapter.submitList(articleResponse.toList())
-                        //val totalPages = 20 / QUERY_PAGE_SIZE + 2
-                        //isLastPage = viewModel.ArticlePage == totalPages
-                        //  if (isLastPage)
-                        //    rvArticles.setPadding(0, 0, 0, 0)
+                        paginationProgressBar.visibility = View.INVISIBLE
+                        oldListArticles.addAll(articleResponse)
+                        articleAdapter.submitList(oldListArticles.toList())
+                        val totalPages = 100 / QUERY_PAGE_SIZE + 2
+                        isLastPage = viewModel.ArticlePage == totalPages
+                        if (isLastPage)
+                            rvArticles.setPadding(0, 0, 0, 0)
                     }
                 }
                 it.status.isError() -> {
@@ -63,24 +78,7 @@ class ArticleFragment : Fragment(R.layout.article_fragment), ArticlesAdapter.OnI
             }
         }
     }
-/*    private fun getNewsOfCountry(countryKey: String) {
-        viewModel.getNewsArticles(countryKey).observe(this, Observer {
-            when {
-                it.status.isLoading() -> {
-                    news_list.showProgressView()
-                }
-                it.status.isSuccessful() -> {
-                    it?.load(news_list) { news ->
-                        adapter.replaceItems(news!!)
-                    }
-                }
-                it.status.isError() -> {
-                    if (it.errorMessage != null)
-                        ToastUtil.showCustomToast(this, it.errorMessage.toString())
-                }
-            }
-        })
-    }*/
+
 
     private val scrollListener = object : RecyclerView.OnScrollListener() {
         override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -106,7 +104,30 @@ class ArticleFragment : Fragment(R.layout.article_fragment), ArticlesAdapter.OnI
                 isNotLoadingAndNotLastPage && isAtLastItem && isNotAtBeginning && isTotalMoreThanVisible && isScrolling
 
             if (shouldPaginate) {
-                viewModel.getNewsArticles("us")
+                viewModel.getNewsArticles(CATEGORY_NEWS).observe(viewLifecycleOwner) {
+                    when {
+                        it.status.isLoading() -> {
+                            paginationProgressBar.visibility = View.VISIBLE
+                            isLoading = false
+                        }
+                        it.status.isSuccessful() -> {
+                            it.data?.let { articleResponse ->
+                                paginationProgressBar.visibility = View.INVISIBLE
+                                oldListArticles.addAll(articleResponse)
+                                Log.i("onScrolled",oldListArticles.toString() )
+                                articleAdapter.submitList(oldListArticles.toList())
+                                val totalPages = 100 / QUERY_PAGE_SIZE + 2
+                                isLastPage = viewModel.ArticlePage == totalPages
+                                if (isLastPage)
+                                    rvArticles.setPadding(0, 0, 0, 0)
+                            }
+                        }
+                        it.status.isError() -> {
+                            //  if (it.errorMessage != null)
+                            //ToastUtil.showCustomToast(this, it.errorMessage.toString())
+                        }
+                    }
+                }
                 isScrolling = false
             }
         }
@@ -117,4 +138,7 @@ class ArticleFragment : Fragment(R.layout.article_fragment), ArticlesAdapter.OnI
              val action = ArticleFragmentDirections.actionArticleFragment2ToDescriptionNewsFragment(article)
               findNavController().navigate(action)
     }
+
+
+
 }

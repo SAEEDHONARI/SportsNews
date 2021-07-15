@@ -10,6 +10,7 @@ import com.example.baloot_saeedhonari.data.local.ArticleDao
 import com.example.baloot_saeedhonari.data.model.Article
 import com.example.baloot_saeedhonari.data.model.Source
 import com.example.baloot_saeedhonari.data.remote.ArticleApi
+import com.example.baloot_saeedhonari.util.API_KEY
 import com.example.baloot_saeedhonari.util.ConnectivityUtil
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -35,15 +36,16 @@ class ArticleRepository @Inject constructor(
      * Fetch the news articles from database if exist else fetch from web
      * and persist them in the database
      */
-    fun getNewsArticles(category: String): LiveData<Resource<List<Article>?>> {
+    fun getNewsArticles(category: String,pageSize:Int,page:Int): LiveData<Resource<List<Article>?>> {
         val data = HashMap<String, String>()
         data["category"] = category
-        data["apiKey"] = "ecd0b0b1b44847808195830be0894b97"
+        data["apiKey"] = API_KEY
 
 
         return object : NetworkAndDBBoundResource<List<Article>, Source>(appExecutors) {
             override fun saveCallResult(item: Source) {
                 if (item.articles.isNotEmpty()) {
+                    if(page==1)
                     articleDao.deleteAllArticles()
                     articleDao.insertArticles(item.articles)
                 }
@@ -55,7 +57,7 @@ class ArticleRepository @Inject constructor(
             override fun loadFromDb() = articleDao.getNewsArticles()
 
             override fun createCall() =
-                apiServices.getNewsSource(data)
+                apiServices.getNewsSource(data,pageSize,page)
 
         }.asLiveData()
     }
@@ -65,20 +67,22 @@ class ArticleRepository @Inject constructor(
      * and persist them in the database
      * LiveData<Resource<NewsSource>>
      */
-    fun getNewsArticlesFromServerOnly(countryShortKey: String):
+    fun getNewsArticlesFromServerOnly(category: String,pageSize:Int,page : Int):
             LiveData<Resource<Source>> {
 
         val data = HashMap<String, String>()
-        data["country"] = countryShortKey
-        data["apiKey"] =  "ecd0b0b1b44847808195830be0894b97"
-
-
+        data["category"] = category
+        data["apiKey"] =  API_KEY
         return object : NetworkResource<Source>() {
             override fun createCall(): LiveData<Resource<Source>> {
-                return apiServices.getNewsSource(data)
+                return apiServices.getNewsSource(data,pageSize,page)
             }
 
         }.asLiveData()
+    }
+
+    fun CleareCache() {
+        articleDao.deleteAllArticles()
     }
 
 }

@@ -1,11 +1,14 @@
 package com.example.baloot_saeedhonari.ui.fragments.description
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebViewClient
+import android.widget.Toast
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.example.baloot_saeedhonari.R
@@ -33,4 +36,5 @@ class DescriptionNewsFragment : Fragment(R.layout.fragment_description_news) {
             }
 
     }
+
 }

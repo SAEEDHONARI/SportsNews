@@ -2,10 +2,14 @@ package com.example.baloot_saeedhonari.ui.activities
 
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.Window
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.baloot_saeedhonari.R
@@ -40,9 +44,25 @@ class MainActivity : AppCompatActivity() {
             window.setBackgroundDrawable(background)
            //  window.navigationBarColor = ContextCompat.getColor(this, R.color.action_bar_color)
 
-
-
         }
     }
 
+    private var doubleBackToExitPressedOnce = false
+    override fun onBackPressed() {
+      //  val fragments = supportFragmentManager.backStackEntryCount
+        val fragmentsID = articleNavHostFragment.findNavController().currentDestination?.getId()
+
+        if (fragmentsID!=R.id.descriptionNewsFragment) {
+            if (doubleBackToExitPressedOnce) {
+                finish()
+            }
+            this.doubleBackToExitPressedOnce = true
+            Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show()
+            Handler(Looper.getMainLooper()).postDelayed(Runnable {
+                doubleBackToExitPressedOnce = false
+            }, 2000)
+        }else{
+            super.onBackPressed()
+        }
+    }
 }

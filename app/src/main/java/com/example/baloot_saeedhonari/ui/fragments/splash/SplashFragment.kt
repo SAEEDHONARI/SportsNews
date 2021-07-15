@@ -29,12 +29,11 @@ class SplashFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
         activityScope.launch {
             delay(1000)
-
             NavHostFragment.findNavController(this@SplashFragment)
                 .navigate(R.id.action_splashFragment_to_articleFragment2)
-
         }
     }
 
@@ -42,4 +41,6 @@ class SplashFragment : Fragment() {
         activityScope.cancel()
         super.onPause()
     }
+
+
 }

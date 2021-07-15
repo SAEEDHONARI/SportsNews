@@ -4,12 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:elevation="10dp"
     android:padding="8dp">
 
     <ImageView
         android:id="@+id/ivArticleImage"
         android:layout_width="160dp"
         android:layout_height="90dp"
+        android:elevation="20dp"
         android:scaleType="centerCrop"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
