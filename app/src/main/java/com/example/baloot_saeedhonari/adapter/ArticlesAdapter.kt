@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
+import com.example.baloot_saeedhonari.R
 import com.example.baloot_saeedhonari.data.model.Article
 import com.example.baloot_saeedhonari.databinding.ItemArticlePreviewBinding
 import com.example.baloot_saeedhonari.ui.fragments.article.ArticleViewModel
@@ -40,10 +42,12 @@ class ArticlesAdapter(private val listener: OnItemClickListener): ListAdapter<Ar
             binding.apply {
                 Glide.with(itemView)
                     .load(article.urlToImage)
+                    .apply(RequestOptions().override(200, 100))
+                    .placeholder(R.drawable.ic_baloot)
                     .into(ivArticleImage)
                 tvDescription.text = article.description
                 tvTitle.text = article.title
-                tvPublishedAt.text = article.author
+                tvPublishedAt.text = article.author?:"Sports.com"
                // tvSource.text = article.source?.name
             }
 

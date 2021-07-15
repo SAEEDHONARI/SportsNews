@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.AbsListView
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.baloot_saeedhonari.R
@@ -113,7 +114,7 @@ class ArticleFragment : Fragment(R.layout.article_fragment), ArticlesAdapter.OnI
 
 
     override fun onItemClick(article: Article) {
-        /*      val action = BreakingNewsFragmentDirections.actionBreakingNewsFragmentToArticleFragment(article)
-              findNavController().navigate(action)*/
+             val action = ArticleFragmentDirections.actionArticleFragment2ToDescriptionNewsFragment(article)
+              findNavController().navigate(action)
     }
 }

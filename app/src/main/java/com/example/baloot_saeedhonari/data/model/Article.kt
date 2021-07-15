@@ -6,6 +6,7 @@ import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 @Entity(tableName = "article_table")
 data class Article(
     @PrimaryKey(autoGenerate = true) var id: Int = 0,
@@ -15,6 +16,6 @@ data class Article(
     @SerializedName("url") var url: String? = null,
     @SerializedName("urlToImage") var urlToImage: String? = null,
     @SerializedName("publishedAt") var publishedAt: String? = null
-)
+):Parcelable
 
 

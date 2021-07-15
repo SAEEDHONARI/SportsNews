@@ -23,10 +23,23 @@
         <action
             android:id="@+id/action_articleFragment2_to_personalInfoFragment"
             app:destination="@id/personalInfoFragment" />
+        <action
+            android:id="@+id/action_articleFragment2_to_descriptionNewsFragment"
+            app:destination="@id/descriptionNewsFragment" />
     </fragment>
     <fragment
         android:id="@+id/personalInfoFragment"
         android:name="com.example.baloot_saeedhonari.ui.fragments.personal.PersonalInfoFragment"
         android:label="personal_info_fragment"
         tools:layout="@layout/personal_info_fragment" />
+    <fragment
+        android:id="@+id/descriptionNewsFragment"
+        android:name="com.example.baloot_saeedhonari.ui.fragments.description.DescriptionNewsFragment"
+        android:label="fragment_description_news"
+        tools:layout="@layout/fragment_description_news"
+        >
+        <argument
+            android:name="description"
+            app:argType="com.example.baloot_saeedhonari.data.model.Article" />
+    </fragment>
 </navigation>
